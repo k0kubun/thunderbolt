@@ -6,6 +6,7 @@ This product is created as a clone of [earthquake](https://github.com/jugyo/eart
 ## Install
 
 ```bash
+$ brew install readline
 $ go get github.com/k0kubun/thunderbolt
 ```
 
@@ -18,7 +19,3 @@ $ thunderbolt
 # Account specific launch
 $ thunderbolt -a k0kubun
 ```
-
-## License
-
-MIT Lisence
