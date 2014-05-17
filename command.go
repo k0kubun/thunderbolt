@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"github.com/k0kubun/go-readline"
-	"github.com/wsxiaoys/terminal/color"
 )
 
 func executeCommand(account *Account, line string) {
@@ -15,7 +15,8 @@ func executeCommand(account *Account, line string) {
 
 func tweet(account *Account, text string) {
 	for {
-		color.Printf("@rupdate '%s'\n", text)
+		notice := fmt.Sprintf("update '%s'\n", text)
+		fmt.Printf(foreColoredText(notice, "red"))
 
 		answer := confirm("[Yn] ")
 		if answer == "Y" || answer == "y" || answer == "" {

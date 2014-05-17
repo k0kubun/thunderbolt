@@ -24,6 +24,15 @@ var (
 	}
 )
 
+func foreColoredText(text string, colorName string) string {
+	color, exists := foregroundColors[colorName]
+	if exists {
+		return coloredText(text, color)
+	} else {
+		return text
+	}
+}
+
 func backColoredText(text string, colorName string) string {
 	color, exists := backgroundColors[colorName]
 	if exists {
