@@ -47,16 +47,7 @@ func DefaultAccount() *Account {
 		return accountConfig.Default
 	}
 
-	credential := auth.CredentialByClientName("Twitter for Android")
-	accessToken := auth.Authenticate(credential)
-
-	account := &Account{
-		ConsumerKey:       credential.ConsumerKey,
-		ConsumerSecret:    credential.ConsumerSecret,
-		AccessToken:       accessToken.Token,
-		AccessTokenSecret: accessToken.Secret,
-		ScreenName:        accessToken.AdditionalData["screen_name"],
-	}
+	account := NewAccount()
 	accountConfig.Default = account
 	accountConfig.MergeAccounts(account)
 	accountConfig.Save()
@@ -71,6 +62,13 @@ func AccountByScreenName(screenName string) *Account {
 		}
 	}
 
+	account := NewAccount()
+	accountConfig.MergeAccounts(account)
+	accountConfig.Save()
+	return account
+}
+
+func NewAccount() *Account {
 	credential := auth.CredentialByClientName("Twitter for Android")
 	accessToken := auth.Authenticate(credential)
 
@@ -81,8 +79,6 @@ func AccountByScreenName(screenName string) *Account {
 		AccessTokenSecret: accessToken.Secret,
 		ScreenName:        accessToken.AdditionalData["screen_name"],
 	}
-	accountConfig.MergeAccounts(account)
-	accountConfig.Save()
 	return account
 }
 
