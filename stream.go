@@ -34,13 +34,9 @@ func printEvent(event interface{}) {
 		tweetDelete := event.(*userstream.Delete)
 		insertLine("[delete] %d", tweetDelete.Id)
 	case *userstream.Favorite:
-		favorite := event.(*userstream.Favorite)
-		insertLine("[favorite] %s => %s : %s",
-			favorite.Source.ScreenName, favorite.Target.ScreenName, favorite.TargetObject.Text)
+		printFavorite(event.(*userstream.Favorite))
 	case *userstream.Unfavorite:
-		unfavorite := event.(*userstream.Unfavorite)
-		insertLine("[unfavorite] %s => %s : %s",
-			unfavorite.Source.ScreenName, unfavorite.Target.ScreenName, unfavorite.TargetObject.Text)
+		printUnfavorite(event.(*userstream.Unfavorite))
 	case *userstream.Follow:
 		follow := event.(*userstream.Follow)
 		insertLine("[follow] %s => %s", follow.Source.ScreenName, follow.Target.ScreenName)
@@ -56,6 +52,26 @@ func printEvent(event interface{}) {
 		insertLine("[list_member_removed] %s (%s)",
 			listMemberRemoved.TargetObject.FullName, listMemberRemoved.TargetObject.Description)
 	}
+}
+
+func printFavorite(favorite *userstream.Favorite) {
+	insertLine(
+		"%s %s => %s : %s",
+		backColoredText("[favorite]", "green"),
+		coloredScreenName(favorite.Source.ScreenName),
+		coloredScreenName(favorite.Target.ScreenName),
+		favorite.TargetObject.Text,
+	)
+}
+
+func printUnfavorite(unfavorite *userstream.Unfavorite) {
+	insertLine(
+		"%s %s => %s : %s",
+		backColoredText("[unfavorite]", "green"),
+		coloredScreenName(unfavorite.Source.ScreenName),
+		coloredScreenName(unfavorite.Target.ScreenName),
+		unfavorite.TargetObject.Text,
+	)
 }
 
 func insertLine(format string, a ...interface{}) {

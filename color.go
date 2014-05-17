@@ -24,6 +24,15 @@ var (
 	}
 )
 
+func backColoredText(text string, colorName string) string {
+	color, exists := backgroundColors[colorName]
+	if exists {
+		return coloredText(text, color)
+	} else {
+		return text
+	}
+}
+
 func coloredScreenName(screenName string) string {
 	firstChar := screenName[0]
 	return randomColoredText(screenName, int(firstChar))
