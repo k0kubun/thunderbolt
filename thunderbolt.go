@@ -31,10 +31,6 @@ func loadAccount() *Account {
 	}
 }
 
-func startUserStream(account *Account) {
-	log.Print(account.ScreenName)
-}
-
 func invokeInteractiveShell(account *Account) {
 	for {
 		currentLine := readline.Readline(prompt(account))
