@@ -79,23 +79,26 @@ func printUnfavorite(unfavorite *userstream.Unfavorite) {
 
 func printFollow(follow *userstream.Follow) {
 	insertLine(
-		"[follow] %s => %s",
-		follow.Source.ScreenName,
-		follow.Target.ScreenName,
+		"%s %s => %s",
+		backColoredText("[follow]", "green"),
+		coloredScreenName(follow.Source.ScreenName),
+		coloredScreenName(follow.Target.ScreenName),
 	)
 }
 
 func printUnfollow(unfollow *userstream.Unfollow) {
 	insertLine(
-		"[unfollow] %s => %s",
-		unfollow.Source.ScreenName,
-		unfollow.Target.ScreenName,
+		"%s %s => %s",
+		backColoredText("[unfollow]", "green"),
+		coloredScreenName(unfollow.Source.ScreenName),
+		coloredScreenName(unfollow.Target.ScreenName),
 	)
 }
 
 func printListMemberAdded(listMemberAdded *userstream.ListMemberAdded) {
 	insertLine(
-		"[list_member_added] %s (%s)",
+		"%s %s (%s)",
+		backColoredText("[list_member_added]", "green"),
 		listMemberAdded.TargetObject.FullName,
 		listMemberAdded.TargetObject.Description,
 	)
@@ -103,7 +106,8 @@ func printListMemberAdded(listMemberAdded *userstream.ListMemberAdded) {
 
 func printListMemberRemoved(listMemberRemoved *userstream.ListMemberRemoved) {
 	insertLine(
-		"[list_member_removed] %s (%s)",
+		"%s %s (%s)",
+		backColoredText("[list_member_removed]", "green"),
 		listMemberRemoved.TargetObject.FullName,
 		listMemberRemoved.TargetObject.Description,
 	)
