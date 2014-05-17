@@ -3,14 +3,52 @@ package main
 import (
 	"fmt"
 	"github.com/k0kubun/go-readline"
+	"log"
+	"regexp"
+	"strings"
 )
 
 func executeCommand(account *Account, line string) {
 	streamBlocked = true
+	defer func() { streamBlocked = false }()
 
-	tweet(account, line)
+	if !strings.HasPrefix(line, ":") {
+		tweet(account, line)
+		return
+	}
 
-	streamBlocked = false
+	command, _ := splitCommand(line)
+	switch command {
+	case "recent":
+	default:
+		fmt.Printf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
+	}
+}
+
+func regexpMatch(text string, exp string) bool {
+	re, err := regexp.Compile(exp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return re.MatchString(text)
+}
+
+func splitCommand(text string) (string, string) {
+	re, err := regexp.Compile("^:[^ ]+")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := re.FindStringIndex(text)
+	if result == nil {
+		return text[1:], ""
+	}
+	last := result[1]
+
+	if last+1 >= len(text) {
+		return text[1:], ""
+	}
+	return text[1:last], text[last+1:]
 }
 
 func tweet(account *Account, text string) {

@@ -8,7 +8,7 @@ var (
 	foregroundColors = map[string]int{
 		"red":     31,
 		"green":   32,
-		"yello":   33,
+		"yellow":  33,
 		"blue":    34,
 		"magenta": 35,
 		"cian":    36,
@@ -17,12 +17,20 @@ var (
 	backgroundColors = map[string]int{
 		"red":     41,
 		"green":   42,
-		"yello":   43,
+		"yellow":  43,
 		"blue":    44,
 		"magenta": 45,
 		"cian":    46,
 	}
 )
+
+func foreBlackText(text string) string {
+	return coloredText(text, 30)
+}
+
+func backBlackText(text string) string {
+	return coloredText(text, 40)
+}
 
 func foreColoredText(text string, colorName string) string {
 	color, exists := foregroundColors[colorName]
