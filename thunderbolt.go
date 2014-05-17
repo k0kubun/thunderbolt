@@ -1,14 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/jessevdk/go-flags"
 	"github.com/k0kubun/go-readline"
 	"log"
-	"time"
-)
-
-var (
-	prompt = "[k0kubun] "
 )
 
 type Options struct {
@@ -36,15 +32,21 @@ func loadAccount() *Account {
 }
 
 func startUserStream(account *Account) {
+	log.Print(account.ScreenName)
 }
 
 func invokeInteractiveShell(account *Account) {
 	for {
-		currentLine := readline.Readline(&prompt)
+		currentLine := readline.Readline(prompt(account))
 		if currentLine == nil || *currentLine == ":exit" {
 			return
 		}
 
 		readline.AddHistory(*currentLine)
 	}
+}
+
+func prompt(account *Account) *string {
+	prompt := fmt.Sprintf("[%s] ", account.ScreenName)
+	return &prompt
 }
