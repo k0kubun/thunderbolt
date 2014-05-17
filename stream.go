@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	lineQueue = []string{}
+	lineQueue     = []string{}
+	streamBlocked = false
 )
 
 func startUserStream(account *Account) {
@@ -24,7 +25,11 @@ func printEvent(event interface{}) {
 	switch event.(type) {
 	case *userstream.Tweet:
 		tweet := event.(*userstream.Tweet)
-		insertLine("%s: %s", tweet.User.ScreenName, tweet.Text)
+		insertLine(
+			"%s: %s",
+			coloredScreenName(tweet.User.ScreenName),
+			tweet.Text,
+		)
 	case *userstream.Delete:
 		tweetDelete := event.(*userstream.Delete)
 		insertLine("[delete] %d", tweetDelete.Id)
@@ -57,7 +62,7 @@ func insertLine(format string, a ...interface{}) {
 	line := fmt.Sprintf(format, a...)
 	lineQueue = append(lineQueue, line)
 
-	if len(readline.LineBuffer()) == 0 {
+	if len(readline.LineBuffer()) == 0 && !streamBlocked {
 		fmt.Printf("\033[0G\033[K")
 		for _, line := range lineQueue {
 			fmt.Println(line)

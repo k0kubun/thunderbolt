@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/k0kubun/twitter"
 	"github.com/k0kubun/twitter-auth/auth"
 	"io/ioutil"
 	"log"
@@ -16,29 +17,22 @@ type Account struct {
 	AccessToken       string
 	AccessTokenSecret string
 	ScreenName        string
+
+	clnt *twitter.Client
 }
 
-type AccountConfig struct {
-	Default  *Account
-	Accounts []*Account
-}
-
-func (a *AccountConfig) Save() {
-	configJson, err := json.Marshal(a)
-	if err != nil {
-		log.Fatal(err)
+func (a *Account) Client() *twitter.Client {
+	if a.clnt != nil {
+		return a.clnt
 	}
-	ioutil.WriteFile(configFilePath(), configJson, 0644)
-}
 
-func (a *AccountConfig) MergeAccounts(account *Account) {
-	for _, currentAccount := range a.Accounts {
-		if currentAccount.ScreenName == account.ScreenName {
-			*currentAccount = *account
-			return
-		}
+	a.clnt = &twitter.Client{
+		ConsumerKey:       a.ConsumerKey,
+		ConsumerSecret:    a.ConsumerSecret,
+		AccessToken:       a.AccessToken,
+		AccessTokenSecret: a.AccessTokenSecret,
 	}
-	a.Accounts = append(a.Accounts, account)
+	return a.clnt
 }
 
 func DefaultAccount() *Account {
@@ -110,4 +104,27 @@ func configFilePath() string {
 func fileExists(filename string) bool {
 	_, err := os.Stat(filename)
 	return !os.IsNotExist(err)
+}
+
+type AccountConfig struct {
+	Default  *Account
+	Accounts []*Account
+}
+
+func (a *AccountConfig) Save() {
+	configJson, err := json.Marshal(a)
+	if err != nil {
+		log.Fatal(err)
+	}
+	ioutil.WriteFile(configFilePath(), configJson, 0644)
+}
+
+func (a *AccountConfig) MergeAccounts(account *Account) {
+	for _, currentAccount := range a.Accounts {
+		if currentAccount.ScreenName == account.ScreenName {
+			*currentAccount = *account
+			return
+		}
+	}
+	a.Accounts = append(a.Accounts, account)
 }

@@ -32,17 +32,20 @@ func loadAccount() *Account {
 }
 
 func invokeInteractiveShell(account *Account) {
+	readline.CatchSignals(0)
+
 	for {
 		currentLine := readline.Readline(prompt(account))
 		if currentLine == nil || *currentLine == ":exit" {
 			return
 		}
 
+		executeCommand(account, *currentLine)
 		readline.AddHistory(*currentLine)
 	}
 }
 
 func prompt(account *Account) *string {
-	prompt := fmt.Sprintf("[%s] ", account.ScreenName)
+	prompt := fmt.Sprintf("[%s] ", coloredScreenName(account.ScreenName))
 	return &prompt
 }
