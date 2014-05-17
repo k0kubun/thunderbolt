@@ -24,34 +24,37 @@ func startUserStream(account *Account) {
 func printEvent(event interface{}) {
 	switch event.(type) {
 	case *userstream.Tweet:
-		tweet := event.(*userstream.Tweet)
-		insertLine(
-			"%s: %s",
-			coloredScreenName(tweet.User.ScreenName),
-			tweet.Text,
-		)
+		printTweet(event.(*userstream.Tweet))
 	case *userstream.Delete:
-		tweetDelete := event.(*userstream.Delete)
-		insertLine("[delete] %d", tweetDelete.Id)
+		printDelete(event.(*userstream.Delete))
 	case *userstream.Favorite:
 		printFavorite(event.(*userstream.Favorite))
 	case *userstream.Unfavorite:
 		printUnfavorite(event.(*userstream.Unfavorite))
 	case *userstream.Follow:
-		follow := event.(*userstream.Follow)
-		insertLine("[follow] %s => %s", follow.Source.ScreenName, follow.Target.ScreenName)
+		printFollow(event.(*userstream.Follow))
 	case *userstream.Unfollow:
-		unfollow := event.(*userstream.Unfollow)
-		insertLine("[unfollow] %s => %s", unfollow.Source.ScreenName, unfollow.Target.ScreenName)
+		printUnfollow(event.(*userstream.Unfollow))
 	case *userstream.ListMemberAdded:
-		listMemberAdded := event.(*userstream.ListMemberAdded)
-		insertLine("[list_member_added] %s (%s)",
-			listMemberAdded.TargetObject.FullName, listMemberAdded.TargetObject.Description)
+		printListMemberAdded(event.(*userstream.ListMemberAdded))
 	case *userstream.ListMemberRemoved:
-		listMemberRemoved := event.(*userstream.ListMemberRemoved)
-		insertLine("[list_member_removed] %s (%s)",
-			listMemberRemoved.TargetObject.FullName, listMemberRemoved.TargetObject.Description)
+		printListMemberRemoved(event.(*userstream.ListMemberRemoved))
 	}
+}
+
+func printTweet(tweet *userstream.Tweet) {
+	insertLine(
+		"%s: %s",
+		coloredScreenName(tweet.User.ScreenName),
+		tweet.Text,
+	)
+}
+
+func printDelete(tweetDelete *userstream.Delete) {
+	insertLine(
+		"[delete] %d",
+		tweetDelete.Id,
+	)
 }
 
 func printFavorite(favorite *userstream.Favorite) {
@@ -71,6 +74,38 @@ func printUnfavorite(unfavorite *userstream.Unfavorite) {
 		coloredScreenName(unfavorite.Source.ScreenName),
 		coloredScreenName(unfavorite.Target.ScreenName),
 		unfavorite.TargetObject.Text,
+	)
+}
+
+func printFollow(follow *userstream.Follow) {
+	insertLine(
+		"[follow] %s => %s",
+		follow.Source.ScreenName,
+		follow.Target.ScreenName,
+	)
+}
+
+func printUnfollow(unfollow *userstream.Unfollow) {
+	insertLine(
+		"[unfollow] %s => %s",
+		unfollow.Source.ScreenName,
+		unfollow.Target.ScreenName,
+	)
+}
+
+func printListMemberAdded(listMemberAdded *userstream.ListMemberAdded) {
+	insertLine(
+		"[list_member_added] %s (%s)",
+		listMemberAdded.TargetObject.FullName,
+		listMemberAdded.TargetObject.Description,
+	)
+}
+
+func printListMemberRemoved(listMemberRemoved *userstream.ListMemberRemoved) {
+	insertLine(
+		"[list_member_removed] %s (%s)",
+		listMemberRemoved.TargetObject.FullName,
+		listMemberRemoved.TargetObject.Description,
 	)
 }
 
