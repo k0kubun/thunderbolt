@@ -11,7 +11,7 @@ var (
 		"yellow":  33,
 		"blue":    34,
 		"magenta": 35,
-		"cian":    36,
+		"cyan":    36,
 	}
 
 	backgroundColors = map[string]int{
@@ -20,7 +20,7 @@ var (
 		"yellow":  43,
 		"blue":    44,
 		"magenta": 45,
-		"cian":    46,
+		"cyan":    46,
 	}
 )
 
