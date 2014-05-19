@@ -44,8 +44,11 @@ func printEvent(event interface{}) {
 }
 
 func printTweet(tweet *twitter.Tweet) {
+	address := tweetMap.registerTweet(tweet)
+
 	insertLine(
-		"%s: %s",
+		"%s %s: %s",
+		foreGrayText(fmt.Sprintf("[$%s]", address)),
 		coloredScreenName(tweet.User.ScreenName),
 		tweet.Text,
 	)

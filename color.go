@@ -60,6 +60,14 @@ func backBlackText(text string) string {
 	return coloredText(text, "\033[40m")
 }
 
+func foreGrayText(text string) string {
+	return coloredText(text, "\033[30m\033[1m")
+}
+
+func backGrayText(text string) string {
+	return coloredText(text, "\033[40m\033[1m")
+}
+
 func foreColoredText(text string, colorName string) string {
 	color, exists := foregroundColors[colorName]
 	if exists {
