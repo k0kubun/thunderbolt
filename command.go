@@ -57,21 +57,9 @@ func splitCommand(text string) (string, string) {
 }
 
 func confirmTweet(account *Account, text string) {
-	for {
-		notice := fmt.Sprintf("update '%s'\n", text)
-		fmt.Printf(foreColoredText(notice, "red"))
-
-		answer := confirm("[Yn] ")
-		if answer == "Y" || answer == "y" || answer == "" {
-			err := updateStatus(account, text)
-			if err != nil {
-				print(err)
-			}
-			return
-		} else if answer == "N" || answer == "n" {
-			return
-		}
-	}
+	confirmExecute(func() error {
+		return updateStatus(account, text)
+	}, "update '%s'", text)
 }
 
 func confirmFavorite(account *Account, argument string) {
@@ -87,13 +75,20 @@ func confirmFavorite(account *Account, argument string) {
 		return
 	}
 
-	for {
-		notice := fmt.Sprintf("favorite '%s'\n", tweet.Text)
-		fmt.Printf(foreColoredText(notice, "red"))
+	confirmExecute(func() error {
+		return favorite(account, tweet)
+	}, "favorite '%s'", tweet.Text)
+}
 
-		answer := confirm("[Yn] ")
+func confirmExecute(function func() error, format string, a ...interface{}) {
+	confirmMessage := fmt.Sprintf(format, a...)
+
+	for {
+		fmt.Println(foreColoredText(confirmMessage, "red"))
+
+		answer := excuse("[Yn] ")
 		if answer == "Y" || answer == "y" || answer == "" {
-			err := favorite(account, tweet)
+			err := function()
 			if err != nil {
 				print(err)
 			}
@@ -102,6 +97,15 @@ func confirmFavorite(account *Account, argument string) {
 			return
 		}
 	}
+}
+
+func excuse(prompt string) string {
+	result := readline.Readline(&prompt)
+	if result == nil {
+		print("\n")
+		return "n"
+	}
+	return *result
 }
 
 func extractAddress(argument string) string {
@@ -116,15 +120,6 @@ func extractAddress(argument string) string {
 	} else {
 		return result[1:]
 	}
-}
-
-func confirm(prompt string) string {
-	result := readline.Readline(&prompt)
-	if result == nil {
-		print("\n")
-		return "n"
-	}
-	return *result
 }
 
 func commandNotFound() {

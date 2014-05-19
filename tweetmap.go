@@ -56,7 +56,6 @@ func (t *TweetMapper) registeredIndex(tweet *twitter.Tweet) int {
 
 func (t *TweetMapper) tweetByAddress(address string) *twitter.Tweet {
 	index := t.indexByAddress(address)
-	fmt.Printf("ind: %d\n", index)
 	if index == inexistentIndex {
 		return nil
 	}
