@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 var (
@@ -60,8 +61,8 @@ func backBlackText(text string) string {
 	return coloredText(text, "\033[40m")
 }
 
-func foreGrayText(text string) string {
-	return coloredText(text, "\033[30m\033[1m")
+func foreGrayText(texts ...string) string {
+	return coloredText(strings.Join(texts, ""), "\033[30m\033[1m")
 }
 
 func backGrayText(text string) string {

@@ -68,7 +68,27 @@ func formattedTweet(tweet *twitter.Tweet) string {
 		foreGrayText(fmt.Sprintf("[$%s]", address)),
 		coloredScreenName(tweet.User.ScreenName),
 		tweet.Text,
-		foreGrayText(fmt.Sprintf("- %s", trimTag(tweet.Source))),
+		foreGrayText(
+			formattedTime(tweet.CreatedAt),
+			" - ",
+			trimTag(tweet.Source),
+		),
+	)
+}
+
+func formattedTime(timeText string) string {
+	t, err := time.Parse(time.RubyDate, timeText)
+	if err != nil {
+		log.Fatal(err)
+	}
+	localTime := t.Local()
+
+	return fmt.Sprintf(
+		"%d %s %02d:%02d",
+		localTime.Day(),
+		localTime.Month(),
+		localTime.Hour(),
+		localTime.Minute(),
 	)
 }
 
