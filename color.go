@@ -121,3 +121,7 @@ func highlightExpression(text, expression, color string) string {
 		return coloredText(word, foregroundColors[color])
 	})
 }
+
+func underline(text string) string {
+	return coloredText(text, "\033[4m")
+}

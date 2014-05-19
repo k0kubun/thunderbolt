@@ -78,11 +78,13 @@ func formattedTweet(tweet *twitter.Tweet) string {
 }
 
 func highlightedTweet(text string) string {
-	re, err := regexp.Compile("@[a-zA-Z0-9_]+")
-	if err != nil {
-		log.Fatal(err)
-	}
+	re, _ := regexp.Compile("@[a-zA-Z0-9_]+")
 	text = re.ReplaceAllStringFunc(text, func(word string) string { return coloredScreenName(word) })
+
+	re, _ = regexp.Compile("https?://[a-zA-Z0-9-_./]+")
+	text = re.ReplaceAllStringFunc(text, func(word string) string {
+		return underline(foreColoredText(word, "cyan"))
+	})
 	return text
 }
 
