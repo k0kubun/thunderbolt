@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/k0kubun/twitter"
 	"log"
+	"regexp"
 	"time"
 )
 
@@ -63,11 +64,20 @@ func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 
 	return fmt.Sprintf(
-		"%s %s: %s",
+		"%s %s: %s %s",
 		foreGrayText(fmt.Sprintf("[$%s]", address)),
 		coloredScreenName(tweet.User.ScreenName),
 		tweet.Text,
+		foreGrayText(fmt.Sprintf("- %s", trimTag(tweet.Source))),
 	)
+}
+
+func trimTag(text string) string {
+	re, err := regexp.Compile("<.+?>")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return re.ReplaceAllString(text, "")
 }
 
 func reversedTweets(tweets []twitter.Tweet) []twitter.Tweet {
