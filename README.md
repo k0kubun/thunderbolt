@@ -39,6 +39,11 @@ $ thunderbolt -a k0kubun
 [k0kubun] :mentions
 ```
 
+### Reply
+```bash
+[k0kubun] $xx Hello!
+```
+
 ### Favorite
 ```bash
 [k0kubun] :favorite $xx

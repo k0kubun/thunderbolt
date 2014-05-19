@@ -12,7 +12,10 @@ func executeCommand(account *Account, line string) {
 	streamBlocked = true
 	defer func() { streamBlocked = false }()
 
-	if !strings.HasPrefix(line, ":") {
+	if regexpMatch(line, "^\\$[a-x][a-x] .") {
+		confirmReply(account, line[1:3], line[3:])
+		return
+	} else if !strings.HasPrefix(line, ":") {
 		confirmTweet(account, line)
 		return
 	}
@@ -58,10 +61,26 @@ func splitCommand(text string) (string, string) {
 	return text[1:last], text[last+1:]
 }
 
+func confirmReply(account *Account, address, text string) {
+	tweet := tweetMap.tweetByAddress(address)
+	if tweet == nil || tweet.Id == 0 {
+		println("Tweet is not registered")
+		return
+	}
+
+	replyText := fmt.Sprintf("@%s%s", tweet.User.ScreenName, text)
+
+	replyTarget := fmt.Sprintf("'%s: %s'", tweet.User.ScreenName, tweet.Text)
+	confirmMessage := fmt.Sprintf("reply '%s'", replyText)
+	confirmExecute(func() error {
+		return replyStatus(account, replyText, tweet.Id)
+	}, "%s\n%s", foreGrayText(replyTarget), foreColoredText(confirmMessage, "red"))
+}
+
 func confirmTweet(account *Account, text string) {
 	confirmExecute(func() error {
 		return updateStatus(account, text)
-	}, "update '%s'", text)
+	}, foreColoredText("update '%s'", "red"), text)
 }
 
 func confirmFavorite(account *Account, argument string) {
@@ -79,7 +98,7 @@ func confirmFavorite(account *Account, argument string) {
 
 	confirmExecute(func() error {
 		return favorite(account, tweet)
-	}, "favorite '%s'", tweet.Text)
+	}, foreColoredText("favorite '%s'", "red"), tweet.Text)
 }
 
 func confirmRetweet(account *Account, argument string) {
@@ -104,7 +123,7 @@ func confirmExecute(function func() error, format string, a ...interface{}) {
 	confirmMessage := fmt.Sprintf(format, a...)
 
 	for {
-		fmt.Println(foreColoredText(confirmMessage, "red"))
+		fmt.Println(confirmMessage)
 
 		answer := excuse("[Yn] ")
 		if answer == "Y" || answer == "y" || answer == "" {
