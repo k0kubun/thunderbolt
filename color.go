@@ -99,6 +99,11 @@ func randomColoredText(text string, seed int) string {
 	return coloredText(text, foregroundColors[colors[index]])
 }
 
+func randomBackColoredText(text string, seed int) string {
+	index := seed % colorsCount
+	return coloredText(text, backgroundColors[colors[index]])
+}
+
 func coloredText(text string, color string) string {
 	return fmt.Sprintf("%s%s\033[0m", color, text)
 }

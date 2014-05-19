@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/k0kubun/twitter"
 	"log"
+	"time"
 )
 
 func updateStatus(account *Account, text string) error {
@@ -22,7 +23,7 @@ func homeTimeline(account *Account) {
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
-		fmt.Println(formattedTweet(&tweet))
+		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
 }
 
@@ -34,7 +35,7 @@ func mentionsTimeline(account *Account) {
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
-		fmt.Println(formattedTweet(&tweet))
+		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
 }
 
@@ -46,7 +47,7 @@ func userTimeline(account *Account, argument string) {
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
-		fmt.Println(formattedTweet(&tweet))
+		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
 }
 
@@ -77,4 +78,9 @@ func reversedTweets(tweets []twitter.Tweet) []twitter.Tweet {
 		reversed[lastIndex-index] = tweet
 	}
 	return reversed
+}
+
+func timelineSeparator() string {
+	seconds := time.Now().Second()
+	return randomBackColoredText(" ", int(seconds))
 }
