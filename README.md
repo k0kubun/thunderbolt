@@ -22,16 +22,19 @@ $ thunderbolt -a k0kubun
 
 ## Command
 ### Tweet
-
-```
+```bash
 [k0kubun] Hello World!
 ```
 
 ### Timeline
-
-```
+```bash
 [k0kubun] :recent
 [k0kubun] :recent k0kubun
+```
+
+### Mentions
+```bash
+[k0kubun] :mentions
 ```
 
 ## Copyright

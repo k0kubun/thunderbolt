@@ -26,6 +26,18 @@ func homeTimeline(account *Account) {
 	}
 }
 
+func mentionsTimeline(account *Account) {
+	client := account.Client()
+	tweets, err := client.MentionsTimeline()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, tweet := range reversedTweets(tweets) {
+		fmt.Println(formattedTweet(&tweet))
+	}
+}
+
 func userTimeline(account *Account, argument string) {
 	client := account.Client()
 	tweets, err := client.UserTimeline(argument)

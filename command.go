@@ -21,6 +21,8 @@ func executeCommand(account *Account, line string) {
 	switch command {
 	case "recent":
 		recent(account, argument)
+	case "mentions":
+		mentionsTimeline(account)
 	default:
 		fmt.Printf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
 	}
