@@ -17,10 +17,10 @@ func executeCommand(account *Account, line string) {
 		return
 	}
 
-	command, _ := splitCommand(line)
+	command, argument := splitCommand(line)
 	switch command {
 	case "recent":
-		recent(account)
+		recent(account, argument)
 	default:
 		fmt.Printf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
 	}
