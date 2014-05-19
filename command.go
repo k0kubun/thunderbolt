@@ -13,7 +13,7 @@ func executeCommand(account *Account, line string) {
 	defer func() { streamBlocked = false }()
 
 	if !strings.HasPrefix(line, ":") {
-		tweetConfirm(account, line)
+		confirmTweet(account, line)
 		return
 	}
 
@@ -23,8 +23,10 @@ func executeCommand(account *Account, line string) {
 		recent(account, argument)
 	case "mentions":
 		mentionsTimeline(account)
+	case "favorite":
+		confirmFavorite(account, argument)
 	default:
-		fmt.Printf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
+		commandNotFound()
 	}
 }
 
@@ -54,7 +56,7 @@ func splitCommand(text string) (string, string) {
 	return text[1:last], text[last+1:]
 }
 
-func tweetConfirm(account *Account, text string) {
+func confirmTweet(account *Account, text string) {
 	for {
 		notice := fmt.Sprintf("update '%s'\n", text)
 		fmt.Printf(foreColoredText(notice, "red"))
@@ -72,6 +74,50 @@ func tweetConfirm(account *Account, text string) {
 	}
 }
 
+func confirmFavorite(account *Account, argument string) {
+	address := extractAddress(argument)
+	if address == "" {
+		commandNotFound()
+		return
+	}
+
+	tweet := tweetMap.tweetByAddress(address)
+	if tweet == nil || tweet.Id == 0 {
+		println("Tweet is not registered")
+		return
+	}
+
+	for {
+		notice := fmt.Sprintf("favorite '%s'\n", tweet.Text)
+		fmt.Printf(foreColoredText(notice, "red"))
+
+		answer := confirm("[Yn] ")
+		if answer == "Y" || answer == "y" || answer == "" {
+			err := favorite(account, tweet)
+			if err != nil {
+				print(err)
+			}
+			return
+		} else if answer == "N" || answer == "n" {
+			return
+		}
+	}
+}
+
+func extractAddress(argument string) string {
+	re, err := regexp.Compile("\\$[a-z][a-z]")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := re.FindString(argument)
+	if result == "" {
+		return ""
+	} else {
+		return result[1:]
+	}
+}
+
 func confirm(prompt string) string {
 	result := readline.Readline(&prompt)
 	if result == nil {
@@ -79,4 +125,8 @@ func confirm(prompt string) string {
 		return "n"
 	}
 	return *result
+}
+
+func commandNotFound() {
+	fmt.Printf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
 }
