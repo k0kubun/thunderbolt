@@ -64,16 +64,25 @@ func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 
 	return fmt.Sprintf(
-		"%s %s: %s %s",
+		"%s %s: %s%s%s",
 		foreGrayText(fmt.Sprintf("[$%s]", address)),
 		coloredScreenName(tweet.User.ScreenName),
 		tweet.Text,
+		protectedBadge(tweet.User),
 		foreGrayText(
 			formattedTime(tweet.CreatedAt),
 			" - ",
 			trimTag(tweet.Source),
 		),
 	)
+}
+
+func protectedBadge(user *twitter.User) string {
+	if user.Protected {
+		return foreColoredText(" [P] ", "red")
+	} else {
+		return " "
+	}
 }
 
 func formattedTime(timeText string) string {
