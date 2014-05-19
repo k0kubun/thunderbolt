@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"regexp"
 	"strings"
 )
 
@@ -107,4 +109,15 @@ func randomBackColoredText(text string, seed int) string {
 
 func coloredText(text string, color string) string {
 	return fmt.Sprintf("%s%s\033[0m", color, text)
+}
+
+func highlightExpression(text, expression, color string) string {
+	re, err := regexp.Compile(expression)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return re.ReplaceAllStringFunc(text, func(word string) string {
+		return coloredText(word, foregroundColors[color])
+	})
 }

@@ -67,7 +67,7 @@ func formattedTweet(tweet *twitter.Tweet) string {
 		"%s %s: %s%s%s",
 		foreGrayText(fmt.Sprintf("[$%s]", address)),
 		coloredScreenName(tweet.User.ScreenName),
-		tweet.Text,
+		highlightedTweet(tweet.Text),
 		protectedBadge(tweet.User),
 		foreGrayText(
 			formattedTime(tweet.CreatedAt),
@@ -75,6 +75,15 @@ func formattedTweet(tweet *twitter.Tweet) string {
 			trimTag(tweet.Source),
 		),
 	)
+}
+
+func highlightedTweet(text string) string {
+	re, err := regexp.Compile("@[a-zA-Z0-9_]+")
+	if err != nil {
+		log.Fatal(err)
+	}
+	text = re.ReplaceAllStringFunc(text, func(word string) string { return coloredScreenName(word) })
+	return text
 }
 
 func protectedBadge(user *twitter.User) string {
