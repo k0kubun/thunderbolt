@@ -58,6 +58,15 @@ func (t *TweetMapper) indexByAddress(address string) int {
 	return 0
 }
 
+func (t *TweetMapper) tweetById(id int64) *twitter.Tweet {
+	for _, tweet := range t.tweets {
+		if tweet.Id == id {
+			return &tweet
+		}
+	}
+	return nil
+}
+
 func (t *TweetMapper) addressByIndex(index int) string {
 	lowerIndex := index % alphabetNumber
 	higherIndex := index / alphabetNumber

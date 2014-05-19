@@ -48,10 +48,15 @@ func printTweet(tweet *twitter.Tweet) {
 }
 
 func printDelete(tweetDelete *userstream.Delete) {
-	insertLine(
-		"[delete] %d",
-		tweetDelete.Id,
-	)
+	tweet := tweetMap.tweetById(tweetDelete.Id)
+	if tweet != nil {
+		message := fmt.Sprintf(
+			"[delete] %s: %s",
+			tweet.User.ScreenName,
+			tweet.Text,
+		)
+		insertLine(foreGrayText(message))
+	}
 }
 
 func printFavorite(favorite *userstream.Favorite) {
