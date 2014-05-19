@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/k0kubun/go-readline"
+	"github.com/k0kubun/twitter"
 	"github.com/k0kubun/userstream"
 )
 
@@ -23,8 +24,8 @@ func startUserStream(account *Account) {
 
 func printEvent(event interface{}) {
 	switch event.(type) {
-	case *userstream.Tweet:
-		printTweet(event.(*userstream.Tweet))
+	case *twitter.Tweet:
+		printTweet(event.(*twitter.Tweet))
 	case *userstream.Delete:
 		printDelete(event.(*userstream.Delete))
 	case *userstream.Favorite:
@@ -42,7 +43,7 @@ func printEvent(event interface{}) {
 	}
 }
 
-func printTweet(tweet *userstream.Tweet) {
+func printTweet(tweet *twitter.Tweet) {
 	insertLine(
 		"%s: %s",
 		coloredScreenName(tweet.User.ScreenName),
