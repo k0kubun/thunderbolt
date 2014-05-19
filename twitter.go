@@ -6,6 +6,10 @@ import (
 	"log"
 )
 
+func updateStatus(account *Account, text string) error {
+	return account.Client().UpdateStatus(text)
+}
+
 func recent(account *Account, argument string) {
 	if len(argument) > 0 {
 		userTimeline(account, argument)

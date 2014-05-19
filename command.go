@@ -13,7 +13,7 @@ func executeCommand(account *Account, line string) {
 	defer func() { streamBlocked = false }()
 
 	if !strings.HasPrefix(line, ":") {
-		tweet(account, line)
+		tweetConfirm(account, line)
 		return
 	}
 
@@ -54,14 +54,14 @@ func splitCommand(text string) (string, string) {
 	return text[1:last], text[last+1:]
 }
 
-func tweet(account *Account, text string) {
+func tweetConfirm(account *Account, text string) {
 	for {
 		notice := fmt.Sprintf("update '%s'\n", text)
 		fmt.Printf(foreColoredText(notice, "red"))
 
 		answer := confirm("[Yn] ")
 		if answer == "Y" || answer == "y" || answer == "" {
-			err := account.Client().UpdateStatus(text)
+			err := updateStatus(account, text)
 			if err != nil {
 				print(err)
 			}
