@@ -36,4 +36,4 @@ $ thunderbolt -a k0kubun
 
 ## Copyright
 
-Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE.md) for details.
+Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE) for details.
