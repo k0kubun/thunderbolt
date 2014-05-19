@@ -62,18 +62,43 @@ func retweet(account *Account, tweet *twitter.Tweet) error {
 
 func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
-
-	return fmt.Sprintf(
-		"%s %s: %s%s%s",
+	header := fmt.Sprintf(
+		"%s %s:",
 		foreGrayText(fmt.Sprintf("[$%s]", address)),
 		coloredScreenName(tweet.User.ScreenName),
-		highlightedTweet(tweet.Text),
+	)
+	footer := fmt.Sprintf(
+		"%s%s",
 		protectedBadge(tweet.User),
 		foreGrayText(
 			formattedTime(tweet.CreatedAt),
 			" - ",
 			trimTag(tweet.Source),
 		),
+	)
+
+	if regexpMatch(tweet.Text, "\n") {
+		return fmt.Sprintf(
+			"%s%s\n       %s",
+			header,
+			liftedTweet(highlightedTweet(tweet.Text)),
+			footer,
+		)
+	} else {
+		return fmt.Sprintf(
+			"%s %s %s",
+			header,
+			highlightedTweet(tweet.Text),
+			footer,
+		)
+	}
+}
+
+func liftedTweet(text string) string {
+	re, _ := regexp.Compile("(^|\n)")
+	return re.ReplaceAllString(
+		text,
+		fmt.Sprintf("\n       %s", foreGrayText("|")),
 	)
 }
 
@@ -97,9 +122,9 @@ func highlightedTweet(text string) string {
 
 func protectedBadge(user *twitter.User) string {
 	if user.Protected {
-		return foreColoredText(" [P] ", "red")
+		return foreColoredText("[P] ", "red")
 	} else {
-		return " "
+		return ""
 	}
 }
 
