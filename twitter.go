@@ -14,14 +14,6 @@ func replyStatus(account *Account, text string, tweetId int64) error {
 	return account.Client().ReplyStatus(text, tweetId)
 }
 
-func recent(account *Account, argument string) {
-	if len(argument) > 0 {
-		userTimeline(account, argument)
-	} else {
-		homeTimeline(account)
-	}
-}
-
 func homeTimeline(account *Account) {
 	client := account.Client()
 	tweets, err := client.HomeTimeline()

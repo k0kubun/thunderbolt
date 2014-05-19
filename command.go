@@ -35,30 +35,12 @@ func executeCommand(account *Account, line string) {
 	}
 }
 
-func regexpMatch(text string, exp string) bool {
-	re, err := regexp.Compile(exp)
-	if err != nil {
-		log.Fatal(err)
+func recent(account *Account, argument string) {
+	if len(argument) > 0 {
+		userTimeline(account, argument)
+	} else {
+		homeTimeline(account)
 	}
-	return re.MatchString(text)
-}
-
-func splitCommand(text string) (string, string) {
-	re, err := regexp.Compile("^:[^ ]+")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	result := re.FindStringIndex(text)
-	if result == nil {
-		return text[1:], ""
-	}
-	last := result[1]
-
-	if last+1 >= len(text) {
-		return text[1:], ""
-	}
-	return text[1:last], text[last+1:]
 }
 
 func confirmReply(account *Account, address, text string) {
@@ -145,6 +127,32 @@ func excuse(prompt string) string {
 		return "n"
 	}
 	return *result
+}
+
+func regexpMatch(text string, exp string) bool {
+	re, err := regexp.Compile(exp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return re.MatchString(text)
+}
+
+func splitCommand(text string) (string, string) {
+	re, err := regexp.Compile("^:[^ ]+")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := re.FindStringIndex(text)
+	if result == nil {
+		return text[1:], ""
+	}
+	last := result[1]
+
+	if last+1 >= len(text) {
+		return text[1:], ""
+	}
+	return text[1:last], text[last+1:]
 }
 
 func extractAddress(argument string) string {
