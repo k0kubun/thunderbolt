@@ -19,3 +19,7 @@ $ thunderbolt
 # Account specific launch
 $ thunderbolt -a k0kubun
 ```
+
+## Copyright
+
+Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE.md) for details.
