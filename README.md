@@ -40,6 +40,11 @@ $ thunderbolt -a k0kubun
 [k0kubun] :favorite $xx
 ```
 
+### Retweet
+```bash
+[k0kubun] :retweet $xx
+```
+
 ## Copyright
 
 Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE) for details.

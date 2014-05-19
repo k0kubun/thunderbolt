@@ -25,6 +25,8 @@ func executeCommand(account *Account, line string) {
 		mentionsTimeline(account)
 	case "favorite":
 		confirmFavorite(account, argument)
+	case "retweet":
+		confirmRetweet(account, argument)
 	default:
 		commandNotFound()
 	}
@@ -78,6 +80,24 @@ func confirmFavorite(account *Account, argument string) {
 	confirmExecute(func() error {
 		return favorite(account, tweet)
 	}, "favorite '%s'", tweet.Text)
+}
+
+func confirmRetweet(account *Account, argument string) {
+	address := extractAddress(argument)
+	if address == "" {
+		commandNotFound()
+		return
+	}
+
+	tweet := tweetMap.tweetByAddress(address)
+	if tweet == nil || tweet.Id == 0 {
+		println("Tweet is not registered")
+		return
+	}
+
+	confirmExecute(func() error {
+		return retweet(account, tweet)
+	}, "retweet '%s'", tweet.Text)
 }
 
 func confirmExecute(function func() error, format string, a ...interface{}) {

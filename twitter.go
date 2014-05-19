@@ -58,6 +58,10 @@ func favorite(account *Account, tweet *twitter.Tweet) error {
 	return account.Client().Favorite(tweet.Id)
 }
 
+func retweet(account *Account, tweet *twitter.Tweet) error {
+	return account.Client().Retweet(tweet.Id)
+}
+
 func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 
