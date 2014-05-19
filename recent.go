@@ -22,11 +22,7 @@ func homeTimeline(account *Account) {
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
-		fmt.Printf(
-			"%s: %s\n",
-			coloredScreenName(tweet.User.ScreenName),
-			tweet.Text,
-		)
+		fmt.Println(formattedTweet(&tweet))
 	}
 }
 
@@ -38,12 +34,19 @@ func userTimeline(account *Account, argument string) {
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
-		fmt.Printf(
-			"%s: %s\n",
-			coloredScreenName(tweet.User.ScreenName),
-			tweet.Text,
-		)
+		fmt.Println(formattedTweet(&tweet))
 	}
+}
+
+func formattedTweet(tweet *twitter.Tweet) string {
+	address := tweetMap.registerTweet(tweet)
+
+	return fmt.Sprintf(
+		"%s %s: %s",
+		foreGrayText(fmt.Sprintf("[$%s]", address)),
+		coloredScreenName(tweet.User.ScreenName),
+		tweet.Text,
+	)
 }
 
 func reversedTweets(tweets []twitter.Tweet) []twitter.Tweet {

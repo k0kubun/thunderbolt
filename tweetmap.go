@@ -14,13 +14,13 @@ var (
 
 // Singleton struct
 type TweetMapper struct {
-	tweets    []*twitter.Tweet
+	tweets    []twitter.Tweet
 	lastIndex int // index for latest tweet
 }
 
 func NewTweetMapper() *TweetMapper {
 	return &TweetMapper{
-		tweets:    make([]*twitter.Tweet, maxIndex+1),
+		tweets:    make([]twitter.Tweet, maxIndex+1),
 		lastIndex: maxIndex,
 	}
 }
@@ -32,7 +32,7 @@ func (t *TweetMapper) registerTweet(tweet *twitter.Tweet) string {
 	}
 
 	newIndex := t.incrementIndex(t.lastIndex)
-	t.tweets[newIndex] = tweet
+	t.tweets[newIndex] = *tweet
 	t.lastIndex = newIndex
 	return t.addressByIndex(newIndex)
 }
@@ -47,9 +47,6 @@ func (t *TweetMapper) incrementIndex(index int) int {
 
 func (t *TweetMapper) registeredIndex(tweet *twitter.Tweet) int {
 	for index, registeredTweet := range t.tweets {
-		if registeredTweet == nil {
-			continue
-		}
 		if registeredTweet.Id == tweet.Id {
 			return index
 		}
