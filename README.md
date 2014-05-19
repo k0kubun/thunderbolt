@@ -3,6 +3,10 @@
 CLI-based Twitter Client using Streaming API.  
 This product is created as a clone of [earthquake](https://github.com/jugyo/earthquake).
 
+## Features
+- Realtime timeline updating by UserStream
+- Multi account support
+
 ## Install
 ```bash
 $ brew install readline
