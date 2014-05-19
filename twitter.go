@@ -78,13 +78,20 @@ func formattedTweet(tweet *twitter.Tweet) string {
 }
 
 func highlightedTweet(text string) string {
+	// Highlight screen_name
 	re, _ := regexp.Compile("@[a-zA-Z0-9_]+")
 	text = re.ReplaceAllStringFunc(text, func(word string) string { return coloredScreenName(word) })
 
+	// Highlight URL
 	re, _ = regexp.Compile("https?://[a-zA-Z0-9-_./]+")
 	text = re.ReplaceAllStringFunc(text, func(word string) string {
 		return underline(foreColoredText(word, "cyan"))
 	})
+
+	// Highlight hash tag
+	re, _ = regexp.Compile("#[^ ]+")
+	text = re.ReplaceAllStringFunc(text, func(word string) string { return coloredScreenName(word) })
+
 	return text
 }
 
