@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/k0kubun/go-readline"
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/k0kubun/go-readline"
 )
 
 func executeCommand(account *Account, line string) {
@@ -111,7 +112,7 @@ func confirmExecute(function func() error, format string, a ...interface{}) {
 		if answer == "Y" || answer == "y" || answer == "" {
 			err := function()
 			if err != nil {
-				print(err)
+				fmt.Printf("Error: %s\n", err.Error())
 			}
 			return
 		} else if answer == "N" || answer == "n" {
