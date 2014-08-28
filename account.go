@@ -3,12 +3,13 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/k0kubun/twitter"
-	"github.com/k0kubun/twitter-auth/auth"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
+
+	"github.com/k0kubun/twitter"
+	"github.com/k0kubun/twitter-auth/auth"
 )
 
 type Account struct {
@@ -63,7 +64,7 @@ func AccountByScreenName(screenName string) *Account {
 }
 
 func NewAccount() *Account {
-	credential := auth.CredentialByClientName("Twitter for Android")
+	credential := auth.CredentialByClientName("Twitter for Google TV")
 	accessToken := auth.Authenticate(credential)
 
 	account := &Account{
