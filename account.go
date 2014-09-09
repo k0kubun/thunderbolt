@@ -64,7 +64,7 @@ func AccountByScreenName(screenName string) *Account {
 }
 
 func NewAccount() *Account {
-	credential := auth.CredentialByClientName("Twitter for Google TV")
+	credential := auth.CredentialByClientName("Twitter for Mac")
 	accessToken := auth.Authenticate(credential)
 
 	account := &Account{
