@@ -10,6 +10,12 @@ import (
 	"github.com/k0kubun/go-readline"
 )
 
+var (
+	commandNotFound = errors.New(
+		fmt.Sprintf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow")),
+	)
+)
+
 func executeCommand(account *Account, line string) error {
 	streamBlocked = true
 	defer func() { streamBlocked = false }()
@@ -34,7 +40,7 @@ func executeCommand(account *Account, line string) error {
 	case "delete":
 		return confirmDelete(account, argument)
 	default:
-		return commandNotFound()
+		return commandNotFound
 	}
 }
 
@@ -47,9 +53,9 @@ func recent(account *Account, argument string) error {
 }
 
 func confirmReply(account *Account, address, text string) error {
-	tweet := tweetMap.tweetByAddress(address)
-	if tweet == nil || tweet.Id == 0 {
-		return errors.New("Tweet is not registered\n")
+	tweet, err := tweetMap.tweetByAddress(address)
+	if err != nil {
+		return err
 	}
 
 	replyText := fmt.Sprintf("@%s%s", tweet.User.ScreenName, text)
@@ -72,12 +78,12 @@ func confirmTweet(account *Account, text string) {
 func confirmFavorite(account *Account, argument string) error {
 	address := extractAddress(argument)
 	if address == "" {
-		return commandNotFound()
+		return commandNotFound
 	}
 
-	tweet := tweetMap.tweetByAddress(address)
-	if tweet == nil || tweet.Id == 0 {
-		return errors.New("Tweet is not registered\n")
+	tweet, err := tweetMap.tweetByAddress(address)
+	if err != nil {
+		return err
 	}
 
 	confirmExecute(func() error {
@@ -90,12 +96,12 @@ func confirmFavorite(account *Account, argument string) error {
 func confirmRetweet(account *Account, argument string) error {
 	address := extractAddress(argument)
 	if address == "" {
-		return commandNotFound()
+		return commandNotFound
 	}
 
-	tweet := tweetMap.tweetByAddress(address)
-	if tweet == nil || tweet.Id == 0 {
-		return errors.New("Tweet is not registered\n")
+	tweet, err := tweetMap.tweetByAddress(address)
+	if err != nil {
+		return err
 	}
 
 	confirmExecute(func() error {
@@ -108,12 +114,12 @@ func confirmRetweet(account *Account, argument string) error {
 func confirmDelete(account *Account, argument string) error {
 	address := extractAddress(argument)
 	if address == "" {
-		return commandNotFound()
+		return commandNotFound
 	}
 
-	tweet := tweetMap.tweetByAddress(address)
-	if tweet == nil || tweet.Id == 0 {
-		return errors.New("Tweet is not registered\n")
+	tweet, err := tweetMap.tweetByAddress(address)
+	if err != nil {
+		return err
 	}
 
 	confirmExecute(func() error {
@@ -189,9 +195,4 @@ func extractAddress(argument string) string {
 	} else {
 		return result[1:]
 	}
-}
-
-func commandNotFound() error {
-	msg := fmt.Sprintf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
-	return errors.New(msg)
 }

@@ -1,15 +1,20 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+
 	"github.com/k0kubun/twitter"
 )
 
 var (
-	tweetMap        = NewTweetMapper()
-	alphabetNumber  = 26
-	maxIndex        = alphabetNumber*alphabetNumber - 1
-	inexistentIndex = -1
+	tweetMap           = NewTweetMapper()
+	alphabetNumber     = 26
+	maxIndex           = alphabetNumber*alphabetNumber - 1
+	inexistentIndex    = -1
+	tweetNotRegistered = errors.New(
+		fmt.Sprintf("%s\n", foreColoredText("Tweet is not registered", "red")),
+	)
 )
 
 // Singleton struct
@@ -54,12 +59,17 @@ func (t *TweetMapper) registeredIndex(tweet *twitter.Tweet) int {
 	return inexistentIndex
 }
 
-func (t *TweetMapper) tweetByAddress(address string) *twitter.Tweet {
+func (t *TweetMapper) tweetByAddress(address string) (*twitter.Tweet, error) {
 	index := t.indexByAddress(address)
 	if index == inexistentIndex {
-		return nil
+		return nil, tweetNotRegistered
 	}
-	return &t.tweets[index]
+
+	tweet := t.tweets[index]
+	if tweet.Id == 0 {
+		return nil, tweetNotRegistered
+	}
+	return &tweet, nil
 }
 
 func (t *TweetMapper) indexByAddress(address string) int {
