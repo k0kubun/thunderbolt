@@ -4,9 +4,16 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/k0kubun/twitter"
+)
+
+var unescape = strings.NewReplacer(
+	"&amp;", "&",
+	"&lt;", "<",
+	"&gt;", ">",
 )
 
 func updateStatus(account *Account, text string) error {
@@ -96,7 +103,7 @@ func formattedTweet(tweet *twitter.Tweet) string {
 		return fmt.Sprintf(
 			"%s %s %s",
 			header,
-			highlightedTweet(tweet.Text),
+			highlightedTweet(unescape.Replace(tweet.Text)),
 			footer,
 		)
 	}
