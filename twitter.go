@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/k0kubun/twitter"
 	"log"
 	"regexp"
 	"time"
+
+	"github.com/k0kubun/twitter"
 )
 
 func updateStatus(account *Account, text string) error {
@@ -16,40 +17,43 @@ func replyStatus(account *Account, text string, tweetId int64) error {
 	return account.Client().ReplyStatus(text, tweetId)
 }
 
-func homeTimeline(account *Account) {
+func homeTimeline(account *Account) error {
 	client := account.Client()
 	tweets, err := client.HomeTimeline()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
 		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
+	return nil
 }
 
-func mentionsTimeline(account *Account) {
+func mentionsTimeline(account *Account) error {
 	client := account.Client()
 	tweets, err := client.MentionsTimeline()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
 		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
+	return nil
 }
 
-func userTimeline(account *Account, argument string) {
+func userTimeline(account *Account, argument string) error {
 	client := account.Client()
 	tweets, err := client.UserTimeline(argument)
 	if err != nil {
-		fmt.Printf("'%s' is invalid screen_name\n", argument)
+		return err
 	}
 
 	for _, tweet := range reversedTweets(tweets) {
 		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
+	return nil
 }
 
 func favorite(account *Account, tweet *twitter.Tweet) error {

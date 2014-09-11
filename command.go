@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"regexp"
@@ -9,48 +10,46 @@ import (
 	"github.com/k0kubun/go-readline"
 )
 
-func executeCommand(account *Account, line string) {
+func executeCommand(account *Account, line string) error {
 	streamBlocked = true
 	defer func() { streamBlocked = false }()
 
 	if regexpMatch(line, "^\\$[a-x][a-x] .") {
-		confirmReply(account, line[1:3], line[3:])
-		return
+		return confirmReply(account, line[1:3], line[3:])
 	} else if !strings.HasPrefix(line, ":") {
 		confirmTweet(account, line)
-		return
+		return nil
 	}
 
 	command, argument := splitCommand(line)
 	switch command {
 	case "recent":
-		recent(account, argument)
+		return recent(account, argument)
 	case "mentions":
-		mentionsTimeline(account)
+		return mentionsTimeline(account)
 	case "favorite":
-		confirmFavorite(account, argument)
+		return confirmFavorite(account, argument)
 	case "retweet":
-		confirmRetweet(account, argument)
+		return confirmRetweet(account, argument)
 	case "delete":
-		confirmDelete(account, argument)
+		return confirmDelete(account, argument)
 	default:
-		commandNotFound()
+		return commandNotFound()
 	}
 }
 
-func recent(account *Account, argument string) {
+func recent(account *Account, argument string) error {
 	if len(argument) > 0 {
-		userTimeline(account, argument)
+		return userTimeline(account, argument)
 	} else {
-		homeTimeline(account)
+		return homeTimeline(account)
 	}
 }
 
-func confirmReply(account *Account, address, text string) {
+func confirmReply(account *Account, address, text string) error {
 	tweet := tweetMap.tweetByAddress(address)
 	if tweet == nil || tweet.Id == 0 {
-		println("Tweet is not registered")
-		return
+		return errors.New("Tweet is not registered\n")
 	}
 
 	replyText := fmt.Sprintf("@%s%s", tweet.User.ScreenName, text)
@@ -60,6 +59,8 @@ func confirmReply(account *Account, address, text string) {
 	confirmExecute(func() error {
 		return replyStatus(account, replyText, tweet.Id)
 	}, "%s\n%s", foreGrayText(replyTarget), foreColoredText(confirmMessage, "red"))
+
+	return nil
 }
 
 func confirmTweet(account *Account, text string) {
@@ -68,58 +69,58 @@ func confirmTweet(account *Account, text string) {
 	}, foreColoredText("update '%s'", "red"), text)
 }
 
-func confirmFavorite(account *Account, argument string) {
+func confirmFavorite(account *Account, argument string) error {
 	address := extractAddress(argument)
 	if address == "" {
-		commandNotFound()
-		return
+		return commandNotFound()
 	}
 
 	tweet := tweetMap.tweetByAddress(address)
 	if tweet == nil || tweet.Id == 0 {
-		println("Tweet is not registered")
-		return
+		return errors.New("Tweet is not registered\n")
 	}
 
 	confirmExecute(func() error {
 		return favorite(account, tweet)
 	}, foreColoredText("favorite '%s'", "red"), tweet.Text)
+
+	return nil
 }
 
-func confirmRetweet(account *Account, argument string) {
+func confirmRetweet(account *Account, argument string) error {
 	address := extractAddress(argument)
 	if address == "" {
-		commandNotFound()
-		return
+		return commandNotFound()
 	}
 
 	tweet := tweetMap.tweetByAddress(address)
 	if tweet == nil || tweet.Id == 0 {
-		println("Tweet is not registered")
-		return
+		return errors.New("Tweet is not registered\n")
 	}
 
 	confirmExecute(func() error {
 		return retweet(account, tweet)
 	}, foreColoredText("retweet '%s'", "red"), tweet.Text)
+
+	return nil
 }
 
-func confirmDelete(account *Account, argument string) {
+func confirmDelete(account *Account, argument string) error {
 	address := extractAddress(argument)
 	if address == "" {
-		commandNotFound()
-		return
+		return commandNotFound()
 	}
 
 	tweet := tweetMap.tweetByAddress(address)
 	if tweet == nil || tweet.Id == 0 {
-		println("Tweet is not registered")
-		return
+		return errors.New("Tweet is not registered\n")
 	}
 
 	confirmExecute(func() error {
 		return delete(account, tweet)
 	}, foreColoredText("delete '%s'", "red"), tweet.Text)
+
+	return nil
 }
 
 func confirmExecute(function func() error, format string, a ...interface{}) {
@@ -190,6 +191,7 @@ func extractAddress(argument string) string {
 	}
 }
 
-func commandNotFound() {
-	fmt.Printf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
+func commandNotFound() error {
+	msg := fmt.Sprintf("%s\n", backColoredText(foreBlackText("Command not found"), "yellow"))
+	return errors.New(msg)
 }

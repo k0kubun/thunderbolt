@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/jessevdk/go-flags"
 	"github.com/k0kubun/go-readline"
-	"log"
 )
 
 type Options struct {
@@ -40,7 +41,10 @@ func invokeInteractiveShell(account *Account) {
 			return
 		}
 
-		executeCommand(account, *currentLine)
+		err := executeCommand(account, *currentLine)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
 		readline.AddHistory(*currentLine)
 	}
 }
