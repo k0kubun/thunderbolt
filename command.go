@@ -23,8 +23,7 @@ func executeCommand(account *Account, line string) error {
 	if regexpMatch(line, "^\\$[a-x][a-x] .") {
 		return confirmReply(account, line[1:3], line[3:])
 	} else if !strings.HasPrefix(line, ":") {
-		confirmTweet(account, line)
-		return nil
+		return confirmTweet(account, line)
 	}
 
 	command, argument := splitCommand(line)
@@ -69,8 +68,8 @@ func confirmReply(account *Account, address, text string) error {
 	return nil
 }
 
-func confirmTweet(account *Account, text string) {
-	confirmExecute(func() error {
+func confirmTweet(account *Account, text string) error {
+	return confirmExecute(func() error {
 		return updateStatus(account, text)
 	}, foreColoredText("update '%s'", "red"), text)
 }
@@ -86,11 +85,9 @@ func confirmFavorite(account *Account, argument string) error {
 		return err
 	}
 
-	confirmExecute(func() error {
+	return confirmExecute(func() error {
 		return favorite(account, tweet)
 	}, foreColoredText("favorite '%s'", "red"), tweet.Text)
-
-	return nil
 }
 
 func confirmRetweet(account *Account, argument string) error {
@@ -104,11 +101,9 @@ func confirmRetweet(account *Account, argument string) error {
 		return err
 	}
 
-	confirmExecute(func() error {
+	return confirmExecute(func() error {
 		return retweet(account, tweet)
 	}, foreColoredText("retweet '%s'", "red"), tweet.Text)
-
-	return nil
 }
 
 func confirmDelete(account *Account, argument string) error {
@@ -122,14 +117,12 @@ func confirmDelete(account *Account, argument string) error {
 		return err
 	}
 
-	confirmExecute(func() error {
+	return confirmExecute(func() error {
 		return delete(account, tweet)
 	}, foreColoredText("delete '%s'", "red"), tweet.Text)
-
-	return nil
 }
 
-func confirmExecute(function func() error, format string, a ...interface{}) {
+func confirmExecute(function func() error, format string, a ...interface{}) error {
 	confirmMessage := fmt.Sprintf(format, a...)
 
 	for {
@@ -137,13 +130,9 @@ func confirmExecute(function func() error, format string, a ...interface{}) {
 
 		answer := excuse("[Yn] ")
 		if answer == "Y" || answer == "y" || answer == "" {
-			err := function()
-			if err != nil {
-				fmt.Printf("Error: %s\n", err.Error())
-			}
-			return
+			return function()
 		} else if answer == "N" || answer == "n" {
-			return
+			return nil
 		}
 	}
 }
