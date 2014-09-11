@@ -56,6 +56,11 @@ $ thunderbolt -a k0kubun
 [k0kubun] :retweet $xx
 ```
 
+### Delete
+```bash
+[k0kubun] :delete $xx
+```
+
 ## Copyright
 
 Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE) for details.

@@ -60,6 +60,10 @@ func retweet(account *Account, tweet *twitter.Tweet) error {
 	return account.Client().Retweet(tweet.Id)
 }
 
+func delete(account *Account, tweet *twitter.Tweet) error {
+	return account.Client().Destroy(tweet.Id)
+}
+
 func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 	header := fmt.Sprintf(

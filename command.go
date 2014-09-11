@@ -31,6 +31,8 @@ func executeCommand(account *Account, line string) {
 		confirmFavorite(account, argument)
 	case "retweet":
 		confirmRetweet(account, argument)
+	case "delete":
+		confirmDelete(account, argument)
 	default:
 		commandNotFound()
 	}
@@ -100,6 +102,24 @@ func confirmRetweet(account *Account, argument string) {
 	confirmExecute(func() error {
 		return retweet(account, tweet)
 	}, "retweet '%s'", tweet.Text)
+}
+
+func confirmDelete(account *Account, argument string) {
+	address := extractAddress(argument)
+	if address == "" {
+		commandNotFound()
+		return
+	}
+
+	tweet := tweetMap.tweetByAddress(address)
+	if tweet == nil || tweet.Id == 0 {
+		println("Tweet is not registered")
+		return
+	}
+
+	confirmExecute(func() error {
+		return delete(account, tweet)
+	}, "delete '%s'", tweet.Text)
 }
 
 func confirmExecute(function func() error, format string, a ...interface{}) {
