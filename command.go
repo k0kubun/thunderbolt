@@ -76,9 +76,9 @@ func confirmTweet(account *Account, text string) {
 }
 
 func confirmFavorite(account *Account, argument string) error {
-	address := extractAddress(argument)
-	if address == "" {
-		return commandNotFound
+	address, err := extractAddress(argument)
+	if err != nil {
+		return err
 	}
 
 	tweet, err := tweetMap.tweetByAddress(address)
@@ -94,9 +94,9 @@ func confirmFavorite(account *Account, argument string) error {
 }
 
 func confirmRetweet(account *Account, argument string) error {
-	address := extractAddress(argument)
-	if address == "" {
-		return commandNotFound
+	address, err := extractAddress(argument)
+	if err != nil {
+		return err
 	}
 
 	tweet, err := tweetMap.tweetByAddress(address)
@@ -112,9 +112,9 @@ func confirmRetweet(account *Account, argument string) error {
 }
 
 func confirmDelete(account *Account, argument string) error {
-	address := extractAddress(argument)
-	if address == "" {
-		return commandNotFound
+	address, err := extractAddress(argument)
+	if err != nil {
+		return err
 	}
 
 	tweet, err := tweetMap.tweetByAddress(address)
@@ -183,16 +183,16 @@ func splitCommand(text string) (string, string) {
 	return text[1:last], text[last+1:]
 }
 
-func extractAddress(argument string) string {
+func extractAddress(argument string) (string, error) {
 	re, err := regexp.Compile("\\$[a-z][a-z]")
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	result := re.FindString(argument)
 	if result == "" {
-		return ""
+		return "", commandNotFound
 	} else {
-		return result[1:]
+		return result[1:], nil
 	}
 }
