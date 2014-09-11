@@ -101,7 +101,7 @@ func confirmRetweet(account *Account, argument string) {
 
 	confirmExecute(func() error {
 		return retweet(account, tweet)
-	}, "retweet '%s'", tweet.Text)
+	}, foreColoredText("retweet '%s'", "red"), tweet.Text)
 }
 
 func confirmDelete(account *Account, argument string) {
@@ -119,7 +119,7 @@ func confirmDelete(account *Account, argument string) {
 
 	confirmExecute(func() error {
 		return delete(account, tweet)
-	}, "delete '%s'", tweet.Text)
+	}, foreColoredText("delete '%s'", "red"), tweet.Text)
 }
 
 func confirmExecute(function func() error, format string, a ...interface{}) {
