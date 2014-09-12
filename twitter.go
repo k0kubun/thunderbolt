@@ -75,6 +75,18 @@ func delete(account *Account, tweet *twitter.Tweet) error {
 	return account.Client().Destroy(tweet.Id)
 }
 
+func getLists(account *Account) error {
+	client := account.Client()
+	lists, err := client.Lists()
+	if err != nil {
+		return err
+	}
+	for _, list := range lists {
+		fmt.Println(list.Name)
+	}
+	return nil
+}
+
 func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 	header := fmt.Sprintf(
