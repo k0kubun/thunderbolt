@@ -82,7 +82,20 @@ func getLists(account *Account) error {
 		return err
 	}
 	for _, list := range lists {
-		fmt.Println(list.Name)
+		fmt.Printf("%s: %s\n", list.IdStr, list.Name)
+	}
+	return nil
+}
+
+func listTimeline(account *Account, argument string) error {
+	client := account.Client()
+	tweets, err := client.ListTimeline(argument)
+	if err != nil {
+		return err
+	}
+
+	for _, tweet := range reversedTweets(tweets) {
+		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
 	}
 	return nil
 }

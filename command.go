@@ -40,6 +40,8 @@ func executeCommand(account *Account, line string) error {
 		return confirmDelete(account, argument)
 	case "lists":
 		return lists(account)
+	case "list":
+		return list(account, argument)
 	default:
 		return commandNotFound
 	}
@@ -141,6 +143,10 @@ func confirmExecute(function func() error, format string, a ...interface{}) erro
 
 func lists(account *Account) error {
 	return getLists(account)
+}
+
+func list(account *Account, argument string) error {
+	return listTimeline(account, argument)
 }
 
 func excuse(prompt string) string {
