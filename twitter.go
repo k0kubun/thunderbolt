@@ -75,6 +75,31 @@ func delete(account *Account, tweet *twitter.Tweet) error {
 	return account.Client().Destroy(tweet.Id)
 }
 
+func getLists(account *Account) error {
+	client := account.Client()
+	lists, err := client.Lists()
+	if err != nil {
+		return err
+	}
+	for _, list := range lists {
+		fmt.Printf("%s: %s\n", list.IdStr, list.Name)
+	}
+	return nil
+}
+
+func listTimeline(account *Account, argument string) error {
+	client := account.Client()
+	tweets, err := client.ListTimeline(argument)
+	if err != nil {
+		return err
+	}
+
+	for _, tweet := range reversedTweets(tweets) {
+		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
+	}
+	return nil
+}
+
 func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 	header := fmt.Sprintf(

@@ -61,6 +61,16 @@ $ thunderbolt -a k0kubun
 [k0kubun] :delete $xx
 ```
 
+### Lists
+```bash
+[k0kubun] :lists
+```
+
+### List
+```bash
+[k0kubun] :list ListID
+```
+
 ## Copyright
 
 Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE) for details.
