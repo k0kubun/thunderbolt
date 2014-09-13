@@ -68,7 +68,7 @@ $ thunderbolt -a k0kubun
 
 ### List
 ```bash
-[k0kubun] :list ListID
+[k0kubun] :list screen_name/slug
 ```
 
 ## Copyright
