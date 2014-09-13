@@ -82,14 +82,18 @@ func getLists(account *Account) error {
 		return err
 	}
 	for _, list := range lists {
-		fmt.Printf("%s: %s\n", list.IdStr, list.Name)
+		//FullName is "@:screen_name/slug"
+		fmt.Println(list.FullName[1:])
 	}
 	return nil
 }
 
 func listTimeline(account *Account, argument string) error {
+	fullName := strings.SplitN(argument, "/", 2)
+	ownerScreenName := fullName[0]
+	slug := fullName[1]
 	client := account.Client()
-	tweets, err := client.ListTimeline(argument)
+	tweets, err := client.ListTimeline(ownerScreenName, slug)
 	if err != nil {
 		return err
 	}
