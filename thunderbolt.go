@@ -13,18 +13,18 @@ type Options struct {
 }
 
 func main() {
-	account := loadAccount()
-
-	startUserStream(account)
-	invokeInteractiveShell(account)
-}
-
-func loadAccount() *Account {
 	options := new(Options)
 	if _, err := flags.Parse(options); err != nil {
 		log.Fatal(err)
 	}
 
+	account := loadAccount(options)
+
+	startUserStream(account)
+	invokeInteractiveShell(account)
+}
+
+func loadAccount(options *Options) *Account {
 	if len(options.ScreenName) > 0 {
 		return AccountByScreenName(options.ScreenName)
 	} else {
