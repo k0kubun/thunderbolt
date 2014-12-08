@@ -22,6 +22,9 @@ $ thunderbolt
 
 # Account specific launch
 $ thunderbolt -a k0kubun
+
+# Just post a tweet and shutdown
+$ thunderbolt -t "Hello World"
 ```
 
 ## Command
