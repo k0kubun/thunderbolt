@@ -10,6 +10,7 @@ import (
 
 type Options struct {
 	ScreenName string `short:"a" long:"account" description:"login as an account of selected screen_name"`
+	Tweet      string `short:"t" long:"tweet" description:"just post a tweet and finish"`
 }
 
 func main() {
@@ -19,6 +20,10 @@ func main() {
 	}
 
 	account := loadAccount(options)
+	if len(options.Tweet) > 0 {
+		updateStatus(account, options.Tweet)
+		return
+	}
 
 	startUserStream(account)
 	invokeInteractiveShell(account)
