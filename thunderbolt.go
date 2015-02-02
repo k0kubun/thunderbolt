@@ -9,8 +9,9 @@ import (
 )
 
 type Options struct {
-	ScreenName string `short:"a" long:"account" description:"login as an account of selected screen_name"`
-	Tweet      string `short:"t" long:"tweet" description:"just post a tweet and finish"`
+	ScreenName  string `short:"a" long:"account" description:"login as an account of selected screen_name"`
+	Tweet       string `short:"t" long:"tweet" description:"just post a tweet and finish"`
+	QuietStream bool   `short:"q" long:"quiet" description:"do not start UserStream"`
 }
 
 func main() {
@@ -25,7 +26,9 @@ func main() {
 		return
 	}
 
-	startUserStream(account)
+	if !options.QuietStream {
+		startUserStream(account)
+	}
 	invokeInteractiveShell(account)
 }
 
