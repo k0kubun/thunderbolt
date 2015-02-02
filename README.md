@@ -74,6 +74,11 @@ $ thunderbolt -t "Hello World"
 [k0kubun] :list screen_name/slug
 ```
 
+### Search
+```bash
+[k0kubun] :search query
+```
+
 ## Copyright
 
 Copyright (c) 2014 Takashi Kokubun. See [LICENSE](https://github.com/k0kubun/thunderbolt/blob/master/LICENSE) for details.

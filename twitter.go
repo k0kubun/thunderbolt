@@ -104,6 +104,20 @@ func listTimeline(account *Account, argument string) error {
 	return nil
 }
 
+func search(account *Account, query string) error {
+	client := account.Client()
+	tweets, err := client.Search(query)
+	if err != nil {
+		return err
+	}
+
+	for _, tweet := range reversedTweets(tweets) {
+		fmt.Println(timelineSeparator() + formattedTweet(&tweet))
+	}
+
+	return nil
+}
+
 func formattedTweet(tweet *twitter.Tweet) string {
 	address := tweetMap.registerTweet(tweet)
 	header := fmt.Sprintf(

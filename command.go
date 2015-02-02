@@ -42,6 +42,8 @@ func executeCommand(account *Account, line string) error {
 		return lists(account)
 	case "list":
 		return list(account, argument)
+	case "search":
+		return search(account, argument)
 	default:
 		return commandNotFound
 	}
