@@ -74,6 +74,11 @@ $ thunderbolt -t "Hello World"
 [k0kubun] :list screen_name/slug
 ```
 
+#### Add to list
+```bash
+[k0kubun] :add screen_name slug
+```
+
 ### Search
 ```bash
 [k0kubun] :search query

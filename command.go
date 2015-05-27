@@ -44,6 +44,8 @@ func executeCommand(account *Account, line string) error {
 		return list(account, argument)
 	case "search":
 		return search(account, argument)
+	case "add":
+		return add(account, argument)
 	default:
 		return commandNotFound
 	}
@@ -149,6 +151,17 @@ func lists(account *Account) error {
 
 func list(account *Account, argument string) error {
 	return listTimeline(account, argument)
+}
+
+func add(account *Account, argument string) error {
+	strs := strings.Split(argument, " ")
+	if len(strs) != 2 {
+		return errors.New(
+			fmt.Sprintf("%s\n", foreColoredText(":add [username] [list]", "red")),
+		)
+	}
+
+	return account.Client().AddToList(account.ScreenName, strs[0], strs[1])
 }
 
 func excuse(prompt string) string {
