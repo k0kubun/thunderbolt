@@ -12,6 +12,13 @@ import (
 	"github.com/k0kubun/twitter-auth/auth"
 )
 
+var (
+	clientCredential = auth.Credential{
+		ConsumerKey:    "fn7H9DcZP4OKAEX38ez4Et2bB",
+		ConsumerSecret: "U8DcCqOctIfSe0uZwaz9Qh2bWq5CL04ylgcPmPAMh0BFRnCRFf",
+	}
+)
+
 type Account struct {
 	ConsumerKey       string
 	ConsumerSecret    string
@@ -64,12 +71,11 @@ func AccountByScreenName(screenName string) *Account {
 }
 
 func NewAccount() *Account {
-	credential := auth.CredentialByClientName("Twitter for Mac")
-	accessToken := auth.Authenticate(credential)
+	accessToken := auth.Authenticate(&clientCredential)
 
 	account := &Account{
-		ConsumerKey:       credential.ConsumerKey,
-		ConsumerSecret:    credential.ConsumerSecret,
+		ConsumerKey:       clientCredential.ConsumerKey,
+		ConsumerSecret:    clientCredential.ConsumerSecret,
 		AccessToken:       accessToken.Token,
 		AccessTokenSecret: accessToken.Secret,
 		ScreenName:        accessToken.AdditionalData["screen_name"],
