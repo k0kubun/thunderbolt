@@ -2,7 +2,7 @@
 
 ![SS](http://i.gyazo.com/cfe106ee557900c6cbbc206177913a55.png)
 
-CLI-based Twitter Client using Streaming API.  
+CLI-based Twitter Client.
 This product is created as a clone of [earthquake](https://github.com/jugyo/earthquake).
 
 ## Features
