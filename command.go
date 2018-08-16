@@ -17,9 +17,6 @@ var (
 )
 
 func executeCommand(account *Account, line string) error {
-	streamBlocked = true
-	defer func() { streamBlocked = false }()
-
 	if regexpMatch(line, "^\\$[a-x][a-x] .") {
 		return confirmReply(account, line[1:3], line[3:])
 	} else if !strings.HasPrefix(line, ":") {
